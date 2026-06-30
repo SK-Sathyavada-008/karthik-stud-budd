@@ -26,7 +26,7 @@ const KEYS = {
 // Force reset existing client-side cache safely on the client
 function initializeStorageReset() {
   if (typeof window === "undefined") return;
-  const resetKey = "stud_bud_reset_v4";
+  const resetKey = "stud_bud_reset_v5";
   if (!localStorage.getItem(resetKey)) {
     localStorage.removeItem(KEYS.PROFILE);
     localStorage.removeItem(KEYS.PROGRESS);
@@ -34,6 +34,13 @@ function initializeStorageReset() {
     localStorage.removeItem(KEYS.NOTES);
     localStorage.removeItem(KEYS.FLASHCARDS);
     localStorage.removeItem(KEYS.QUIZ_HISTORY);
+    // Clear all dynamic lesson caches
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("stud_bud_lesson_")) {
+        localStorage.removeItem(key);
+      }
+    }
     localStorage.setItem(resetKey, "done");
   }
 }
@@ -232,22 +239,6 @@ export async function getChapter(subjectId: string, chapterId: string): Promise<
 }
 
 export async function getLessonData(chapterId: string): Promise<ChapterLessonData | undefined> {
-  // 1. Check static mock data
-  if (MOCK_LESSON_DATA[chapterId]) {
-    return MOCK_LESSON_DATA[chapterId];
-  }
-
-  // 2. Check localStorage cache
-  const cachedKey = `stud_bud_lesson_${chapterId}`;
-  if (typeof window !== "undefined") {
-    const cached = localStorage.getItem(cachedKey);
-    if (cached) {
-      try {
-        return JSON.parse(cached) as ChapterLessonData;
-      } catch (_) {}
-    }
-  }
-
   // Find the subject and name details for this chapter
   let foundChapter: Chapter | undefined;
   let subjectId = "";
@@ -262,36 +253,18 @@ export async function getLessonData(chapterId: string): Promise<ChapterLessonDat
 
   if (!foundChapter) return undefined;
 
-  // 3. Try to call the API generator
-  try {
-    const response = await fetch("/api/lesson-generator", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        subjectId,
-        chapterId,
-        chapterName: foundChapter.name
-      })
-    });
+  // Compile dynamically so every chapter gets the structured Topic/Subtopic summaries and large question bank
+  const compiled = compileChapterData(subjectId, chapterId, foundChapter.name, foundChapter.chapterNumber);
 
-    if (response.ok) {
-      const data = await response.json();
-      if (typeof window !== "undefined") {
-        localStorage.setItem(cachedKey, JSON.stringify(data));
-      }
-      return data as ChapterLessonData;
-    }
-  } catch (error) {
-    console.warn("API lesson generator failed, falling back to mock generator:", error);
+  // Preserve custom diagram practices if they exist in static mock data
+  if (MOCK_LESSON_DATA[chapterId]?.diagramPractices) {
+    compiled.diagramPractices = MOCK_LESSON_DATA[chapterId].diagramPractices;
   }
 
-  // 4. Offline Fallback: Local dynamic mock generator
-  const fallbackData = generateMockLessonData(subjectId, chapterId, foundChapter.name, foundChapter.chapterNumber);
-  if (typeof window !== "undefined") {
-    localStorage.setItem(cachedKey, JSON.stringify(fallbackData));
-  }
-  return fallbackData;
+  return compiled;
 }
+
+
 
 export function generateMockLessonData(
   subjectId: string,
