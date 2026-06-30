@@ -1,24 +1,86 @@
 import { Subject, Chapter, Concept, SolvedExample, PracticeQuestion, MCQQuestion, AssertionReasonQuestion, CaseStudyQuestion, HOTSQuestion, PYQQuestion, DiagramPractice, Formula, MindMapNode, Flashcard } from "./types";
 
 export const MOCK_SUBJECTS: Subject[] = [
-  { id: "physics", classId: "class-9", name: "Physics", code: "PHY-9", colorTheme: "purple", iconName: "zap", totalChapters: 4, completedChapters: 1, estimatedHours: 15 },
-  { id: "chemistry", classId: "class-9", name: "Chemistry", code: "CHEM-9", colorTheme: "blue", iconName: "droplet", totalChapters: 4, completedChapters: 0, estimatedHours: 18 },
-  { id: "biology", classId: "class-9", name: "Biology", code: "BIO-9", colorTheme: "green", iconName: "activity", totalChapters: 4, completedChapters: 0, estimatedHours: 14 },
-  { id: "math", classId: "class-9", name: "Math", code: "MATH-9", colorTheme: "orange", iconName: "plus-circle", totalChapters: 15, completedChapters: 0, estimatedHours: 40 },
-  { id: "history", classId: "class-9", name: "History", code: "HIST-9", colorTheme: "amber", iconName: "book-open", totalChapters: 5, completedChapters: 0, estimatedHours: 16 },
-  { id: "geography", classId: "class-9", name: "Geography", code: "GEOG-9", colorTheme: "emerald", iconName: "globe", totalChapters: 6, completedChapters: 0, estimatedHours: 15 },
-  { id: "civics", classId: "class-9", name: "Political Science", code: "CIV-9", colorTheme: "sky", iconName: "users", totalChapters: 5, completedChapters: 0, estimatedHours: 12 },
-  { id: "economics", classId: "class-9", name: "Economics", code: "ECON-9", colorTheme: "rose", iconName: "trending-up", totalChapters: 4, completedChapters: 0, estimatedHours: 10 },
-  { id: "english", classId: "class-9", name: "English", code: "ENG-9", colorTheme: "violet", iconName: "feather", totalChapters: 12, completedChapters: 0, estimatedHours: 20 },
-  { id: "it-402", classId: "class-9", name: "IT - 402", code: "IT-402", colorTheme: "indigo", iconName: "cpu", totalChapters: 8, completedChapters: 0, estimatedHours: 15 }
+  { id: "physics", classId: "class-9", name: "Physics", code: "PHY-9", colorTheme: "purple", iconName: "zap", totalChapters: 5, completedChapters: 1, estimatedHours: 18 },
+  { id: "chemistry", classId: "class-9", name: "Chemistry", code: "CHEM-9", colorTheme: "blue", iconName: "droplet", totalChapters: 3, completedChapters: 0, estimatedHours: 12 },
+  { id: "biology", classId: "class-9", name: "Biology", code: "BIO-9", colorTheme: "green", iconName: "activity", totalChapters: 5, completedChapters: 0, estimatedHours: 16 },
+  { id: "math", classId: "class-9", name: "Math", code: "MATH-9", colorTheme: "orange", iconName: "plus-circle", totalChapters: 8, completedChapters: 0, estimatedHours: 32 },
+  { id: "history", classId: "class-9", name: "History", code: "HIST-9", colorTheme: "amber", iconName: "book-open", totalChapters: 3, completedChapters: 0, estimatedHours: 12 },
+  { id: "geography", classId: "class-9", name: "Geography", code: "GEOG-9", colorTheme: "emerald", iconName: "globe", totalChapters: 2, completedChapters: 0, estimatedHours: 10 },
+  { id: "civics", classId: "class-9", name: "Political Science", code: "CIV-9", colorTheme: "sky", iconName: "users", totalChapters: 2, completedChapters: 0, estimatedHours: 8 },
+  { id: "economics", classId: "class-9", name: "Economics", code: "ECON-9", colorTheme: "rose", iconName: "trending-up", totalChapters: 2, completedChapters: 0, estimatedHours: 8 },
+  { id: "english", classId: "class-9", name: "English", code: "ENG-9", colorTheme: "violet", iconName: "feather", totalChapters: 8, completedChapters: 0, estimatedHours: 16 },
+  { id: "it-402", classId: "class-9", name: "IT - 402", code: "IT-402", colorTheme: "indigo", iconName: "cpu", totalChapters: 10, completedChapters: 0, estimatedHours: 20 }
 ];
 
 export const MOCK_CHAPTERS: Record<string, Chapter[]> = {
   physics: [
-    { id: "motion", subjectId: "physics", chapterNumber: 8, name: "Motion", estimatedTime: "4.5 hours", difficulty: "Medium", description: "Learn about displacement, velocity, acceleration, and the three equations of motion using real-life examples and graphs." },
-    { id: "force", subjectId: "physics", chapterNumber: 9, name: "Force and Laws of Motion", estimatedTime: "5 hours", difficulty: "Hard", description: "Understand balanced and unbalanced forces, Newton's three laws of motion, and inertia." },
-    { id: "gravitation", subjectId: "physics", chapterNumber: 10, name: "Gravitation", estimatedTime: "4 hours", difficulty: "Medium", description: "Explore the universal law of gravitation, free fall, acceleration due to gravity, thrust, pressure, and Archimedes' principle." },
-    { id: "work", subjectId: "physics", chapterNumber: 11, name: "Work and Energy", estimatedTime: "4 hours", difficulty: "Medium", description: "Learn the scientific definition of work, kinetic and potential energy, and the law of conservation of energy." }
+    { id: "exploration-science", subjectId: "physics", chapterNumber: 1, name: "Exploration: Entering Secondary Science", estimatedTime: "2 hours", difficulty: "Easy", description: "An introduction to secondary science: physical quantities, standard measurements, laboratory tools, and modern inquiry methodologies." },
+    { id: "motion", subjectId: "physics", chapterNumber: 4, name: "Describing Motion Around Us", estimatedTime: "4.5 hours", difficulty: "Medium", description: "Learn about displacement, velocity, acceleration, and the three equations of motion using real-life examples and graphs." },
+    { id: "force", subjectId: "physics", chapterNumber: 6, name: "How Forces Affect Motion", estimatedTime: "5 hours", difficulty: "Hard", description: "Understand balanced and unbalanced forces, Newton's three laws of motion, momentum, and inertia." },
+    { id: "work", subjectId: "physics", chapterNumber: 7, name: "Work, Energy and Simple Machines", estimatedTime: "4 hours", difficulty: "Medium", description: "Learn the scientific definition of work, kinetic and potential energy, the law of conservation of energy, and introductions to simple machines (levers, pulleys)." },
+    { id: "sound-waves", subjectId: "physics", chapterNumber: 10, name: "Sound Waves & Applications", estimatedTime: "4 hours", difficulty: "Medium", description: "Explore the nature of sound, its propagation as longitudinal waves, key characteristics like pitch/amplitude, and applications including SONAR." }
+  ],
+  chemistry: [
+    { id: "exploring-mixtures", subjectId: "chemistry", chapterNumber: 5, name: "Exploring Mixtures and Separation", estimatedTime: "4 hours", difficulty: "Medium", description: "Understand types of mixtures, solutions, suspensions, colloids, and standard separation techniques (filtration, chromatography, distillation)." },
+    { id: "inside-atom", subjectId: "chemistry", chapterNumber: 8, name: "Journey Inside the Atom", estimatedTime: "4.5 hours", difficulty: "Hard", description: "Explore historical atomic models (Thomson, Rutherford, Bohr), subatomic particles (protons, neutrons, electrons), and the concept of valency." },
+    { id: "atomic-foundation", subjectId: "chemistry", chapterNumber: 9, name: "Atomic Foundation of Matter", estimatedTime: "4.5 hours", difficulty: "Hard", description: "Study elements, compounds, law of chemical combination, molecular mass, chemical formula writing, and mole concepts." }
+  ],
+  biology: [
+    { id: "cell-block", subjectId: "biology", chapterNumber: 2, name: "Cell: The Building Block of Life", estimatedTime: "3.5 hours", difficulty: "Easy", description: "Explore the fundamental cell theory, prokaryotic and eukaryotic cells, cell organelles, plasma membrane transport, and cell division." },
+    { id: "tissues-action", subjectId: "biology", chapterNumber: 3, name: "Tissues in Action", estimatedTime: "4 hours", difficulty: "Medium", description: "Learn about division of labor in multicellular organisms, plant tissues (meristematic/permanent) and animal tissues (epithelial, connective, muscular, nervous)." },
+    { id: "reproduction", subjectId: "biology", chapterNumber: 11, name: "Reproduction: How Life Continues", estimatedTime: "3 hours", difficulty: "Easy", description: "Explore how life perpetuates: types of asexual reproduction, sexual reproduction in plants and animals, and basic evolutionary impact." },
+    { id: "patterns-life", subjectId: "biology", chapterNumber: 12, name: "Patterns in Life: Diversity", estimatedTime: "4 hours", difficulty: "Medium", description: "Learn about taxonomy, classification hierarchy, characteristics of major plant and animal kingdoms, and naming conventions." },
+    { id: "earth-system", subjectId: "biology", chapterNumber: 13, name: "Earth as a System: Life & Energy", estimatedTime: "3 hours", difficulty: "Easy", description: "Understand environmental science: carbon, nitrogen, water cycles, energy flows, carbon footprints, and sustainability." }
+  ],
+  math: [
+    { id: "coordinates", subjectId: "math", chapterNumber: 1, name: "The Use of Coordinates", estimatedTime: "3 hours", difficulty: "Easy", description: "Learn cartesian coordinates, plotting points in four quadrants, and finding distances and mappings on coordinate axes." },
+    { id: "linear-polynomials", subjectId: "math", chapterNumber: 2, name: "Introduction to Linear Polynomials", estimatedTime: "4 hours", difficulty: "Medium", description: "Explore single-variable linear polynomials, zeroes of polynomials, and representing linear equations graphically." },
+    { id: "world-numbers", subjectId: "math", chapterNumber: 3, name: "The World of Numbers", estimatedTime: "4 hours", difficulty: "Medium", description: "Study real numbers: rational and irrational numbers, decimal expansions, representing numbers on a number line, and laws of exponents." },
+    { id: "algebraic-identities", subjectId: "math", chapterNumber: 4, name: "Exploring Algebraic Identities", estimatedTime: "5 hours", difficulty: "Hard", description: "Master essential algebraic identities (expansion and factorization) and apply them to complex mathematical problems." },
+    { id: "up-down-round", subjectId: "math", chapterNumber: 5, name: "Up and Down, Round and Round", estimatedTime: "4.5 hours", difficulty: "Medium", description: "Study geometric transformations (reflections, rotations, translations) and symmetry in coordinate planes." },
+    { id: "measuring-space", subjectId: "math", chapterNumber: 6, name: "Perimeter and Area of Shapes", estimatedTime: "4 hours", difficulty: "Easy", description: "Calculate perimeter and area of common polygons, including Heron's formula for triangles, and apply to real-world dimensions." },
+    { id: "probability", subjectId: "math", chapterNumber: 7, name: "Introduction to Probability", estimatedTime: "3 hours", difficulty: "Easy", description: "Understand chance: experimental versus theoretical probability, outcomes, sample spaces, and predicting real-life odds." },
+    { id: "sequences-progressions", subjectId: "math", chapterNumber: 8, name: "Exploring Sequences & Progressions", estimatedTime: "4 hours", difficulty: "Hard", description: "Analyze number patterns, write general rules, and explore arithmetic and basic geometric sequences." }
+  ],
+  history: [
+    { id: "social-science-intro", subjectId: "history", chapterNumber: 1, name: "Understanding Social Science", estimatedTime: "3 hours", difficulty: "Easy", description: "Learn how historians, geographers, and sociologists gather evidence and reconstruct the story of human society." },
+    { id: "early-humans", subjectId: "history", chapterNumber: 4, name: "Early Humans and Civilisation", estimatedTime: "4.5 hours", difficulty: "Medium", description: "Explore the journey from nomadic hunter-gatherers to agriculture, copper-bronze age, and the Harappan Civilisation." },
+    { id: "state-society-1000", subjectId: "history", chapterNumber: 5, name: "State and Society up to 1000 CE", estimatedTime: "4 hours", difficulty: "Medium", description: "Understand the rise of ancient empires, mahajanapadas, Mauryan, Gupta, Chola, and early medieval Indian states." }
+  ],
+  geography: [
+    { id: "shaping-earth", subjectId: "geography", chapterNumber: 2, name: "Shaping of the Earth's Surface", estimatedTime: "4 hours", difficulty: "Medium", description: "Explore plate tectonics, internal forces shaping landforms, earthquakes, volcanoes, weathering, and river systems." },
+    { id: "atmosphere-climate", subjectId: "geography", chapterNumber: 3, name: "Atmosphere and Climate", estimatedTime: "5 hours", difficulty: "Hard", description: "Analyze composition and layers of the atmosphere, insulation, global wind patterns, rainfall types, and climate change." }
+  ],
+  civics: [
+    { id: "democracy", subjectId: "civics", chapterNumber: 6, name: "Democracy in Action", estimatedTime: "4 hours", difficulty: "Medium", description: "Learn what democracy is, its features, core constitutional values, and historical milestones (including the 1975 Emergency)." },
+    { id: "elections", subjectId: "civics", chapterNumber: 7, name: "Elections and representation", estimatedTime: "3.5 hours", difficulty: "Easy", description: "Explore election systems, the role of political parties, the Election Commission of India, and voter participation." }
+  ],
+  economics: [
+    { id: "economic-choice", subjectId: "economics", chapterNumber: 8, name: "Problem of Choice & Resources", estimatedTime: "3.5 hours", difficulty: "Easy", description: "Learn fundamental economics: scarcity, land, labor, capital, human resources, and the central problem of allocation." },
+    { id: "market-drives", subjectId: "economics", chapterNumber: 9, name: "What Drives the Market?", estimatedTime: "4 hours", difficulty: "Medium", description: "Analyze demand, supply, prices, consumer behavior, and public versus private goods in general markets." }
+  ],
+  english: [
+    { id: "grandmother-read", subjectId: "english", chapterNumber: 1, name: "Grandmother's Reading & Bharat", estimatedTime: "2 hours", difficulty: "Easy", description: "Prose: How I Taught My Grandmother to Read. Poem: Bharat Our Land. Explores generational respect and patriotism." },
+    { id: "pot-maker", subjectId: "english", chapterNumber: 2, name: "The Pot Maker & Gifts of Grace", estimatedTime: "2 hours", difficulty: "Easy", description: "Prose: The Pot Maker. Poem: Gifts of Grace. Reflects on vocational callings, master craftsmanship, and dignity of labor." },
+    { id: "winds-change", subjectId: "english", chapterNumber: 3, name: "Winds of Change & Canvas of Soil", estimatedTime: "2 hours", difficulty: "Easy", description: "Prose: Winds of Change. Poem: Canvas of Soil. Themes of environmental care, adapting to migration, and rural agriculture." },
+    { id: "vitamin-m", subjectId: "english", chapterNumber: 4, name: "Vitamin-M & Mother's Memory", estimatedTime: "2 hours", difficulty: "Medium", description: "Prose: Vitamin-M. Poem: I Cannot Remember My Mother. Explores the power of monetary literacy and maternal bonds." },
+    { id: "possibilities", subjectId: "english", chapterNumber: 5, name: "Limitless Possibilities & 9 Gold Medals", estimatedTime: "2 hours", difficulty: "Medium", description: "Prose: The World of Limitless Possibilities. Poem: Nine Gold Medals. Explores inclusion, sportsmanship, and determination." },
+    { id: "twin-melodies", subjectId: "english", chapterNumber: 6, name: "Twin Melodies & Musical Friends", estimatedTime: "2.5 hours", difficulty: "Easy", description: "Prose: Twin Melodies. Poem: A Friend Found in Music. Focuses on the universality of music, classical systems, and friendship." },
+    { id: "carrier-words", subjectId: "english", chapterNumber: 7, name: "Carrier of Words & Language", estimatedTime: "2 hours", difficulty: "Medium", description: "Prose: Carrier of Words. Poem: Words. Studies language structure, writing history, and communication impact." },
+    { id: "follow-dream", subjectId: "english", chapterNumber: 8, name: "Follow That Dream & Self Belief", estimatedTime: "2 hours", difficulty: "Easy", description: "Prose: Follow That Dream. Poem: Believe in Yourself. Focuses on ambition, facing setbacks, and self-confidence." }
+  ],
+  "it-402": [
+    { id: "communication-skills", subjectId: "it-402", chapterNumber: 1, name: "Communication Skills-I", estimatedTime: "1.5 hours", difficulty: "Easy", description: "Master basic speaking, listening, and writing protocols. Learn methods of communication and perspectives." },
+    { id: "self-management", subjectId: "it-402", chapterNumber: 2, name: "Self-Management Skills-I", estimatedTime: "2 hours", difficulty: "Easy", description: "Learn self-confidence, goal-setting, personal hygiene, and grooming strategies to build discipline." },
+    { id: "ict-skills", subjectId: "it-402", chapterNumber: 3, name: "Basic ICT Skills-I", estimatedTime: "2.5 hours", difficulty: "Medium", description: "Learn standard computer operations, file structures, naming conventions, operating systems, and safe internet browsing." },
+    { id: "entrepreneurial-skills", subjectId: "it-402", chapterNumber: 4, name: "Entrepreneurial Skills-I", estimatedTime: "2 hours", difficulty: "Medium", description: "Understand business roles, startup concepts, risk management, and the function of entrepreneurship in community development." },
+    { id: "green-skills", subjectId: "it-402", chapterNumber: 5, name: "Green Skills-I", estimatedTime: "2 hours", difficulty: "Easy", description: "Explore the ecosystem, natural resources conservation, green economy, and reducing personal carbon footprints." },
+    { id: "it-ites-industry", subjectId: "it-402", chapterNumber: 6, name: "Introduction to IT-ITeS Industry", estimatedTime: "2 hours", difficulty: "Easy", description: "Introduction to Information Technology Enabled Services, BPO industries, and standard digital career options." },
+    { id: "keyboard-skills", subjectId: "it-402", chapterNumber: 7, name: "Data Entry & Keyboarding Skills", estimatedTime: "2 hours", difficulty: "Easy", description: "Master typing postures, numeric keypad usage, key mappings, and training softwares to improve speed and accuracy." },
+    { id: "digital-documentation", subjectId: "it-402", chapterNumber: 8, name: "Digital Documentation", estimatedTime: "2.5 hours", difficulty: "Medium", description: "Work with word processors: editing documents, inserting tables, images, formatting paragraphs, and configuring mail merge." },
+    { id: "electronic-spreadsheet", subjectId: "it-402", chapterNumber: 9, name: "Electronic Spreadsheet", estimatedTime: "2.5 hours", difficulty: "Medium", description: "Master spreadsheet calculations, formulas (SUM, AVERAGE), cell references, basic graphs, and formatting tables." },
+    { id: "digital-presentation", subjectId: "it-402", chapterNumber: 10, name: "Digital Presentation", estimatedTime: "2 hours", difficulty: "Medium", description: "Learn to build presentation slides, insert shapes, transitions, apply templates, and execute slide shows." }
   ]
 };
 
@@ -59,9 +121,9 @@ export const MOCK_LESSON_DATA: Record<string, ChapterLessonData> = {
     chapterInfo: {
       classLevel: "Class 9",
       subjectName: "Physics",
-      chapterNumber: 8,
-      chapterName: "Motion",
-      ncertRef: "NCERT Class 9 Science Textbook, Chapter 8 (Latest 2026 Edition)",
+      chapterNumber: 4,
+      chapterName: "Describing Motion Around Us",
+      ncertRef: "NCERT Class 9 Science Textbook, Chapter 4 (Latest 2026 Edition)",
       estimatedTime: "4.5 hours",
       difficulty: "Medium"
     },
@@ -365,7 +427,7 @@ export const MOCK_LESSON_DATA: Record<string, ChapterLessonData> = {
     ],
     mindMap: {
       id: "root-motion",
-      label: "Chapter 8: Motion",
+      label: "Chapter 4: Describing Motion Around Us",
       type: "root",
       children: [
         {

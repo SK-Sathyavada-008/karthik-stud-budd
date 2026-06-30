@@ -29,6 +29,7 @@ export default function MindMap({ rootNode }: MindMapProps) {
 
   // Helper to describe nodes for details panel
   const getNodeExplanation = (node: MindMapNode): string => {
+    if (node.description) return node.description;
     switch (node.id) {
       case "root-motion":
         return "Motion is the change in position of an object over time. This chapter covers the metrics we use to measure motion, the equations that calculate it, and how to plot it on graphs.";

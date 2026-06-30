@@ -1,6 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
-import { Subject, Chapter, Bookmark, UserProfile, UserNote, Flashcard, Badge } from "./types";
+import { 
+  Subject, Chapter, Bookmark, UserProfile, UserNote, Flashcard, Badge,
+  Concept, SolvedExample, PracticeQuestion, MCQQuestion, AssertionReasonQuestion, 
+  CaseStudyQuestion, HOTSQuestion, PYQQuestion, Formula, MindMapNode 
+} from "./types";
 import { MOCK_SUBJECTS, MOCK_CHAPTERS, MOCK_LESSON_DATA, ChapterLessonData } from "./seedData";
+import { compileChapterData } from "./chapterContentData";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -18,8 +23,9 @@ const KEYS = {
   QUIZ_HISTORY: "stud_bud_quiz_history"
 };
 
-// Force reset existing client-side cache to let the student start from scratch
-if (typeof window !== "undefined") {
+// Force reset existing client-side cache safely on the client
+function initializeStorageReset() {
+  if (typeof window === "undefined") return;
   const resetKey = "stud_bud_reset_v4";
   if (!localStorage.getItem(resetKey)) {
     localStorage.removeItem(KEYS.PROFILE);
@@ -54,6 +60,7 @@ const ALL_BADGES: Omit<Badge, "unlockedAt">[] = [
 // Helper to get item from local storage with fallback
 function getLocal<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
+  initializeStorageReset();
   const item = localStorage.getItem(key);
   if (!item) {
     localStorage.setItem(key, JSON.stringify(fallback));
@@ -225,7 +232,93 @@ export async function getChapter(subjectId: string, chapterId: string): Promise<
 }
 
 export async function getLessonData(chapterId: string): Promise<ChapterLessonData | undefined> {
-  return MOCK_LESSON_DATA[chapterId];
+  // 1. Check static mock data
+  if (MOCK_LESSON_DATA[chapterId]) {
+    return MOCK_LESSON_DATA[chapterId];
+  }
+
+  // 2. Check localStorage cache
+  const cachedKey = `stud_bud_lesson_${chapterId}`;
+  if (typeof window !== "undefined") {
+    const cached = localStorage.getItem(cachedKey);
+    if (cached) {
+      try {
+        return JSON.parse(cached) as ChapterLessonData;
+      } catch (_) {}
+    }
+  }
+
+  // Find the subject and name details for this chapter
+  let foundChapter: Chapter | undefined;
+  let subjectId = "";
+  for (const [subId, chapters] of Object.entries(MOCK_CHAPTERS)) {
+    const ch = chapters.find(c => c.id === chapterId);
+    if (ch) {
+      foundChapter = ch;
+      subjectId = subId;
+      break;
+    }
+  }
+
+  if (!foundChapter) return undefined;
+
+  // 3. Try to call the API generator
+  try {
+    const response = await fetch("/api/lesson-generator", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subjectId,
+        chapterId,
+        chapterName: foundChapter.name
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (typeof window !== "undefined") {
+        localStorage.setItem(cachedKey, JSON.stringify(data));
+      }
+      return data as ChapterLessonData;
+    }
+  } catch (error) {
+    console.warn("API lesson generator failed, falling back to mock generator:", error);
+  }
+
+  // 4. Offline Fallback: Local dynamic mock generator
+  const fallbackData = generateMockLessonData(subjectId, chapterId, foundChapter.name, foundChapter.chapterNumber);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(cachedKey, JSON.stringify(fallbackData));
+  }
+  return fallbackData;
+}
+
+export function generateMockLessonData(
+  subjectId: string,
+  chapterId: string,
+  chapterName: string,
+  chapterNumber: number
+): ChapterLessonData {
+  return compileChapterData(subjectId, chapterId, chapterName, chapterNumber);
+}
+
+export async function getAllLessonData(): Promise<Record<string, ChapterLessonData>> {
+  const combined = { ...MOCK_LESSON_DATA };
+  
+  if (typeof window !== "undefined") {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("stud_bud_lesson_")) {
+        const chapterId = key.substring("stud_bud_lesson_".length);
+        try {
+          const lesson = JSON.parse(localStorage.getItem(key) || "") as ChapterLessonData;
+          combined[chapterId] = lesson;
+        } catch (_) {}
+      }
+    }
+  }
+  
+  return combined;
 }
 
 /* ==========================================================================

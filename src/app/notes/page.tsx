@@ -14,7 +14,7 @@ export default function NotesPage() {
 
   // Selected note editing
   const [selectedNoteChId, setSelectedNoteChId] = useState<string>("motion");
-  const [noteTitle, setNoteTitle] = useState("My Revision Notes - Chapter 8: Motion");
+  const [noteTitle, setNoteTitle] = useState("My Revision Notes - Chapter 4: Describing Motion Around Us");
   const [noteContent, setNoteContent] = useState("");
   const [noteSaved, setNoteSaved] = useState(false);
 
@@ -33,7 +33,7 @@ export default function NotesPage() {
         setNoteContent(motionNote.content);
       } else {
         setNoteContent(
-          "# Chapter 8: Motion - Study Notes\n\n- Distance is a scalar, displacement is a vector.\n- Equations of Motion:\n  1. v = u + at\n  2. s = ut + 0.5 * a * t^2\n  3. v^2 = u^2 + 2as\n- Odometer measures total distance.\n- In circular motion with constant speed, velocity changes direction constantly, so it is an accelerated motion!"
+          "# Chapter 4: Describing Motion Around Us - Study Notes\n\n- Distance is a scalar, displacement is a vector.\n- Equations of Motion:\n  1. v = u + at\n  2. s = ut + 0.5 * a * t^2\n  3. v^2 = u^2 + 2as\n- Odometer measures total distance.\n- In circular motion with constant speed, velocity changes direction constantly, so it is an accelerated motion!"
         );
       }
     }
@@ -257,9 +257,9 @@ export default function NotesPage() {
                 </div>
                 <div className="space-y-1.5">
                   {[
-                    { id: "motion", title: "Chapter 8: Motion" },
-                    { id: "force", title: "Chapter 9: Force & Laws" },
-                    { id: "gravitation", title: "Chapter 10: Gravitation" }
+                    { id: "motion", title: "Chapter 4: Describing Motion" },
+                    { id: "force", title: "Chapter 6: How Forces Affect Motion" },
+                    { id: "work", title: "Chapter 7: Work and Energy" }
                   ].map((ch) => (
                     <button
                       key={ch.id}

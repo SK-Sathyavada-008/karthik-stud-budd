@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MOCK_LESSON_DATA } from "@/lib/seedData";
+import { getAllLessonData } from "@/lib/db";
 import { Brain, ArrowLeft, Search, BookOpen, Calculator, HelpCircle, CheckCircle, Sun, Moon } from "lucide-react";
 import katex from "katex";
 
@@ -49,7 +49,7 @@ function SearchPageContent() {
     }
   };
 
-  const performSearch = (searchTerm: string) => {
+  const performSearch = async (searchTerm: string) => {
     const term = searchTerm.toLowerCase().trim();
     if (!term) return;
 
@@ -58,8 +58,9 @@ function SearchPageContent() {
     const matchedExamples: any[] = [];
     const matchedQuestions: any[] = [];
 
-    // Search through all seeded lesson content
-    Object.entries(MOCK_LESSON_DATA).forEach(([chapterId, data]) => {
+    // Search through all seeded and generated lesson content
+    const allLessonData = await getAllLessonData();
+    Object.entries(allLessonData).forEach(([chapterId, data]) => {
       const chapterName = data.chapterInfo.chapterName;
 
       // 1. Search Concepts

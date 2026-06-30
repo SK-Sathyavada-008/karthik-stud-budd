@@ -148,9 +148,8 @@ export default function SubjectPage() {
           <h1 className="font-heading text-2xl font-black text-slate-900 dark:text-white mt-2">
             CBSE {subject.name} Class 9
           </h1>
-          <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed dark:text-slate-400">
-            Click on the chapter below to open the lesson modules. We have seeded detailed lessons for **Chapter 8: Motion** with all warm-ups, diagrams, mind maps, revision sheets, and AI Tutor streaming.
-          </p>
+            Click on the chapter below to open the lesson modules. All chapters are synchronized with the latest NCERT 2026 syllabus, with detailed lessons, gamified quizzes, mind maps, and interactive AI Tutor coaching.
+
         </div>
 
         {/* SEARCH AND FILTER BAR */}

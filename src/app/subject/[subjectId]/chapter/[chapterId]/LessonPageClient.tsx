@@ -128,7 +128,9 @@ function LessonPageContent() {
   const sectionsList = [
     { id: "intro", label: "1. Introduction & Warmup" },
     { id: "concepts", label: "2. Explanations & NCERT" },
-    { id: "diagrams", label: "3. Visual Labelling" },
+    ...(lesson.diagramPractices && lesson.diagramPractices.length > 0
+      ? [{ id: "diagrams", label: "3. Visual Labelling" }]
+      : []),
     { id: "formulas", label: "4. Formulas & Examples" },
     { id: "quiz", label: "5. Gamified Quiz Mode" },
     { id: "revision", label: "6. Summary & Flashcards" }
@@ -347,10 +349,16 @@ function LessonPageContent() {
                   </button>
                 ) : (
                   <button
-                    onClick={() => setActiveSection("diagrams")}
+                    onClick={() => {
+                      if (lesson.diagramPractices && lesson.diagramPractices.length > 0) {
+                        setActiveSection("diagrams");
+                      } else {
+                        setActiveSection("formulas");
+                      }
+                    }}
                     className="flex items-center gap-2 rounded-2xl bg-indigo-650 px-6 py-3 text-xs font-bold text-white shadow-sm hover:bg-indigo-755 dark:bg-indigo-600 dark:hover:bg-indigo-505"
                   >
-                    Step 3: Visual labeling
+                    {lesson.diagramPractices && lesson.diagramPractices.length > 0 ? "Step 3: Visual labeling" : "Step 4: Formulas & Examples"}
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 )}
@@ -516,10 +524,16 @@ function LessonPageContent() {
 
               <div className="flex justify-between pt-4">
                 <button
-                  onClick={() => setActiveSection("diagrams")}
-                  className="rounded-xl border border-slate-205 bg-white px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400"
+                  onClick={() => {
+                    if (lesson.diagramPractices && lesson.diagramPractices.length > 0) {
+                      setActiveSection("diagrams");
+                    } else {
+                      setActiveSection("concepts");
+                    }
+                  }}
+                  className="rounded-xl border border-slate-205 bg-white px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:border-slate-805 dark:bg-slate-900 dark:text-slate-400"
                 >
-                  ◀ Back to Visuals
+                  {lesson.diagramPractices && lesson.diagramPractices.length > 0 ? "◀ Back to Visuals" : "◀ Back to Concepts"}
                 </button>
                 <button
                   onClick={() => setActiveSection("quiz")}

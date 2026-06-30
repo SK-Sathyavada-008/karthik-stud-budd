@@ -1,8 +1,7 @@
 import { NextRequest } from "next/server";
 import { ChatMessage, BASE_SYSTEM_INSTRUCTION } from "@/lib/gemini";
 
-// Disable caching for streaming routes
-export const dynamic = "force-dynamic";
+// Caching is bypassed by default in POST requests
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 const GEMINI_MODEL = "gemini-1.5-flash";

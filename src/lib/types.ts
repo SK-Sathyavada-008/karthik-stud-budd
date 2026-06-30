@@ -153,6 +153,7 @@ export interface MindMapNode {
   label: string;
   type: "root" | "main" | "sub" | "detail";
   children?: MindMapNode[];
+  description?: string;
 }
 
 export interface Flashcard {
