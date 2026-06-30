@@ -196,14 +196,35 @@ export function compileChapterData(
     suggestedAnswer: `${c.definition} ${c.example} ${c.recap}`,
   }));
 
-  // ── Build MCQs ────────────────────────────────────────────────────────────
-  const mcqs: MCQQuestion[] = raw.mcqs.map((q, i) => ({
-    id: `mcq-${i + 1}`,
-    question: q.question,
-    options: q.options,
-    correctIndex: q.correctIndex,
-    explanation: q.explanation,
-  }));
+  // ── Build MCQs (Originals + Concept-specific Generated MCQs) ─────────────────
+  const generatedMCQs: MCQQuestion[] = raw.concepts.map((c, i) => {
+    // Determine wrong options based on other concepts or fallbacks
+    const otherConcept1 = raw.concepts[(i + 1) % raw.concepts.length]?.name ?? "An alternative unrelated phenomenon";
+    const otherConcept2 = raw.concepts[(i + 2) % raw.concepts.length]?.name ?? "A simplified theoretical model";
+    return {
+      id: `mcq-gen-${i + 1}`,
+      question: `According to the NCERT curriculum, which of the following is the most accurate definition or application of "${c.name}"?`,
+      options: [
+        c.ncertDefinition,
+        `It is the process describing "${otherConcept1}" under ideal conditions.`,
+        `It is a component of "${otherConcept2}" that has been deprecated under current guidelines.`,
+        `It is a theoretical calculation with no practical real-life examples.`
+      ],
+      correctIndex: 0,
+      explanation: `Option A is correct because it matches the official NCERT definition for ${c.name}: "${c.ncertDefinition}".`
+    };
+  });
+
+  const mcqs: MCQQuestion[] = [
+    ...raw.mcqs.map((q, i) => ({
+      id: `mcq-${i + 1}`,
+      question: q.question,
+      options: q.options,
+      correctIndex: q.correctIndex,
+      explanation: q.explanation,
+    })),
+    ...generatedMCQs
+  ];
 
   // ── Build Flashcards ──────────────────────────────────────────────────────
   const flashcards: Flashcard[] = raw.flashcards.map((f, i) => ({
@@ -215,81 +236,50 @@ export function compileChapterData(
     nextReviewAt: new Date().toISOString(),
   }));
 
-  // ── Build Assertion-Reason Questions ─────────────────────────────────────
-  const assertionReasons: AssertionReasonQuestion[] = raw.concepts.slice(0, 2).map((c, i) => ({
+  // ── Build Assertion-Reason Questions (One for EVERY concept) ────────────────
+  const assertionReasons: AssertionReasonQuestion[] = raw.concepts.map((c, i) => ({
     id: `ar-${i + 1}`,
-    assertion: `${c.name} is a fundamental concept in ${chapterTitle} that has direct real-world applications.`,
-    reason: c.recap,
+    assertion: `${c.name} is a core foundation of the ${chapterTitle} syllabus and has direct practical utility.`,
+    reason: `${c.recap}`,
     correctOption: "A" as const,
-    explanation: `Both the assertion and reason are correct. ${c.name} is indeed fundamental and its application — ${c.recap.substring(0, 120)} — confirms this.`,
+    explanation: `Both Assertion (A) and Reason (R) are true, and the reason correctly explains the assertion. ${c.name} is key, and its recap explains: ${c.recap.substring(0, 120)}...`
   }));
 
-  // ── Build Case Study ──────────────────────────────────────────────────────
-  const passage = raw.concepts.slice(0, 2).map((c) => c.example).join(" ");
+  // ── Build Case Study (Exhaustive Case Study with multiple questions) ────────
+  const passage = raw.concepts.map((c) => `[Case Context: ${c.name}] — ${c.example} ${c.definition.substring(0, 180)}...`).join("\n\n");
   const caseStudy: CaseStudyQuestion = {
     id: "case-1",
     passage: passage || `This chapter introduces key concepts in ${chapterTitle}. Real-world applications demonstrate how these principles operate in everyday situations.`,
-    questions: [
-      {
-        question: `Based on the passage, identify the key concept being demonstrated and explain its significance in ${chapterTitle}.`,
-        options: [
-          raw.concepts[0]?.name ?? "The first concept",
-          raw.concepts[1]?.name ?? "The second concept",
-          "A concept from a different chapter",
-          "None of the above",
-        ],
-        correctIndex: 0,
-        explanation: raw.concepts[0]?.recap ?? `The passage demonstrates the core principle of ${chapterTitle}.`,
-      },
-      {
-        question: `What real-world application is illustrated in the passage?`,
-        options: [
-          (raw.concepts[0]?.example ? raw.concepts[0].example.substring(0, 60) + "..." : "A practical application"),
-          "A theoretical concept with no real use",
-          "An unrelated engineering problem",
-          "A historical event",
-        ],
-        correctIndex: 0,
-        explanation: `The example directly illustrates ${raw.concepts[0]?.name ?? chapterTitle} in a real-world context.`,
-      },
-    ],
+    questions: raw.concepts.map((c, i) => ({
+      question: `Based on the case context, how is "${c.name}" applied practically?`,
+      options: [
+        c.example,
+        "It is used purely for historical context.",
+        "It is only relevant for advanced university level research.",
+        "It has no experimental confirmation in standard laboratory setups."
+      ],
+      correctIndex: 0,
+      explanation: `The case passage highlights the real-world application of ${c.name} as: "${c.example}".`
+    }))
   };
 
-  // ── Build HOTS ────────────────────────────────────────────────────────────
-  const hotsQuestions: HOTSQuestion[] = [
-    {
-      id: "hots-1",
-      question: `If you were a scientist investigating ${chapterTitle}, what experiment would you design to test the key principle? Describe your hypothesis, method, and expected results.`,
-      thinkingProcess: `Consider the core principle of ${chapterTitle}. Think about what variables you would control, change, and measure. Design an experiment that would produce observable, measurable data.`,
-      answer: `A well-structured HOTS answer should include: (1) Clear hypothesis based on the chapter's key principle: ${raw.concepts[0]?.recap ?? ""}. (2) Experimental method with controlled and independent variables. (3) Expected observations based on the theory. (4) Conclusion connecting results to the principle.`,
-    },
-    {
-      id: "hots-2",
-      question: `Analyse how ${chapterTitle} is interconnected with other subjects you study. Give two specific examples of these cross-subject connections.`,
-      thinkingProcess: `Think about how ${chapterTitle} concepts appear in other subjects: mathematics, other science branches, geography, history, or real technology.`,
-      answer: `Cross-subject connections of ${chapterTitle}: (1) Mathematics — ${chapterTitle} uses mathematical tools like formulas, graphs, and calculations. (2) Technology — principles from ${chapterTitle} are applied in modern technology and engineering. Strong answers show specific, accurate connections with clear explanation.`,
-    },
-  ];
+  // ── Build HOTS (Exhaustive Concept-Mapped HOTS Questions) ───────────────────
+  const hotsQuestions: HOTSQuestion[] = raw.concepts.map((c, i) => ({
+    id: `hots-${i + 1}`,
+    question: `[HOTS] Analyze a complex situation where "${c.name}" interacts with external variables. How would you design an experiment or solve a problem based on the NCERT guidelines?`,
+    thinkingProcess: `Examine the core definition: "${c.definition}". Formulate a logical method to control variables and evaluate the outcome based on NCERT guidelines.`,
+    answer: `Analytical Answer: 1. State the central principle: ${c.ncertDefinition}. 2. Identify the variable relationships. 3. Apply the memory trick or formula if applicable. 4. Real-life application: ${c.example}.`
+  }));
 
-  // ── Build PYQs ────────────────────────────────────────────────────────────
-  const pyqs: PYQQuestion[] = [
-    {
-      id: "pyq-1",
-      year: 2024,
-      marks: 3,
-      question: `(CBSE 2024) Define ${raw.concepts[0]?.name ?? chapterTitle} and state one practical application.`,
-      answer: raw.concepts[0]?.ncertDefinition ?? `Refer to the NCERT 2026 definition and example for ${chapterTitle}.`,
-      examinerComments: `This question tests conceptual clarity. Use the NCERT definition exactly and support with a specific real-world example.`,
-    },
-    {
-      id: "pyq-2",
-      year: 2023,
-      marks: 5,
-      question: `(CBSE 2023) Explain ${raw.concepts.length > 1 ? raw.concepts[1].name : chapterTitle} with a labelled diagram and two examples.`,
-      answer: `${raw.concepts.length > 1 ? raw.concepts[1].definition : ""} ${raw.concepts.length > 1 ? raw.concepts[1].example : "See NCERT examples."}`,
-      examinerComments: `Full-mark answers include the NCERT definition, a clear diagram with all labels, and two distinct examples from everyday life.`,
-    },
-  ];
+  // ── Build PYQs (Exhaustive Concept-Mapped Previous Year Questions) ──────────
+  const pyqs: PYQQuestion[] = raw.concepts.map((c, i) => ({
+    id: `pyq-${i + 1}`,
+    year: 2025 - (i % 3),
+    marks: i % 2 === 0 ? 3 : 5,
+    question: `(CBSE ${2025 - (i % 3)}) Define "${c.name}" and provide its key highlights and a relevant real-world illustration.`,
+    answer: `NCERT Guidelines: 1. Core definition: ${c.ncertDefinition}. 2. Highlights: ${c.highlights ? c.highlights.join("; ") : ""}. 3. Example: ${c.example}.`,
+    examinerComments: `High scoring answers explicitly stated the NCERT definition and gave a clear real-life example to earn full marks.`
+  }));
 
   // ── Build Diagram Practice (empty for non-physics chapters) ──────────────
   const diagramPractices: DiagramPractice[] = [];
@@ -312,6 +302,45 @@ export function compileChapterData(
       })),
     })),
   };
+
+  // ── Build Summary Points (Topic -> Subtopic -> NCERT Points) ───────────────
+  const summaryPoints: string[] = [];
+  if (raw.concepts && raw.concepts.length > 0) {
+    raw.concepts.forEach((c) => {
+      // Main topic heading
+      summaryPoints.push(`## ${c.name}`);
+      
+      // Subtopic 1
+      summaryPoints.push(`### NCERT Definition & Core Concept`);
+      summaryPoints.push(`- **NCERT Definition**: ${c.ncertDefinition}`);
+      
+      // Subtopic 2
+      summaryPoints.push(`### Key Explanations & Details`);
+      if (c.highlights && c.highlights.length > 0) {
+        c.highlights.forEach((hl) => {
+          summaryPoints.push(`- ${hl}`);
+        });
+      } else {
+        summaryPoints.push(`- ${c.definition}`);
+      }
+      
+      // Subtopic 3
+      summaryPoints.push(`### Real-World Applications & Exam Focus`);
+      summaryPoints.push(`- **Real-Life Example**: ${c.example}`);
+      if (c.analogy) {
+        summaryPoints.push(`- **Conceptual Analogy**: ${c.analogy}`);
+      }
+      if (c.trick) {
+        summaryPoints.push(`- **Memory Trick**: ${c.trick}`);
+      }
+      if (c.mistakes) {
+        summaryPoints.push(`- **Common Mistakes to Avoid**: ${c.mistakes}`);
+      }
+      summaryPoints.push(`- **CBSE Exam Insight**: ${c.examText}`);
+    });
+  } else {
+    summaryPoints.push(...raw.summaryPoints);
+  }
 
   // ── Assemble complete ChapterLessonData ───────────────────────────────────
   return {
@@ -341,7 +370,7 @@ export function compileChapterData(
     diagramPractices,
     formulas,
     revisionPoints: raw.revisionPoints,
-    summaryPoints: raw.summaryPoints,
+    summaryPoints,
     mindMap,
     flashcards,
   };

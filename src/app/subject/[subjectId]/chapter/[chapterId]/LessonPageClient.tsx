@@ -594,27 +594,54 @@ function LessonPageContent() {
                   </h3>
                 </div>
                 
-                <ul className="space-y-2.5 text-sm text-slate-655 dark:text-slate-350">
-                  {lesson.summaryPoints.map((point, idx) => {
-                    const parsedPoint = point.split(/(\$[^\$]*\$)/g).map((part, pIdx) => {
-                      if (part.startsWith("$") && part.endsWith("$")) {
-                        try {
-                          const html = katex.renderToString(part.slice(1, -1), { throwOnError: false });
-                          return <span key={pIdx} className="inline-block mx-0.5 font-bold" dangerouslySetInnerHTML={{ __html: html }} />;
-                        } catch (_) { return part; }
+                <ul className="space-y-3.5 text-sm text-slate-655 dark:text-slate-350">
+                  {(() => {
+                    let bulletCounter = 0;
+                    return lesson.summaryPoints.map((point, idx) => {
+                      if (point.startsWith("## ")) {
+                        const headingText = point.replace("## ", "");
+                        return (
+                          <li key={idx} className="pt-6 pb-2 border-b border-slate-100 dark:border-slate-800 first:pt-2">
+                            <h4 className="font-heading text-base font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full bg-indigo-650 dark:bg-indigo-400"></span>
+                              {headingText}
+                            </h4>
+                          </li>
+                        );
                       }
-                      return part;
-                    });
+                      if (point.startsWith("### ")) {
+                        const subHeadingText = point.replace("### ", "");
+                        return (
+                          <li key={idx} className="pt-3 pb-1 pl-4">
+                            <h5 className="font-heading text-sm font-semibold text-indigo-600 dark:text-indigo-455">
+                              {subHeadingText}
+                            </h5>
+                          </li>
+                        );
+                      }
 
-                    return (
-                      <li key={idx} className="flex gap-3 items-start">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-indigo-50 text-[10px] font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-400">
-                          {idx + 1}
-                        </span>
-                        <span className="leading-relaxed">{parsedPoint}</span>
-                      </li>
-                    );
-                  })}
+                      bulletCounter++;
+                      const cleanPoint = point.startsWith("- ") ? point.slice(2) : point;
+                      const parsedPoint = cleanPoint.split(/(\$[^\$]*\$)/g).map((part, pIdx) => {
+                        if (part.startsWith("$") && part.endsWith("$")) {
+                          try {
+                            const html = katex.renderToString(part.slice(1, -1), { throwOnError: false });
+                            return <span key={pIdx} className="inline-block mx-0.5 font-semibold text-slate-900 dark:text-white" dangerouslySetInnerHTML={{ __html: html }} />;
+                          } catch (_) { return part; }
+                        }
+                        return part;
+                      });
+
+                      return (
+                        <li key={idx} className="flex gap-3 items-start pl-6">
+                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-[10px] font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-400">
+                            {bulletCounter}
+                          </span>
+                          <span className="leading-relaxed">{parsedPoint}</span>
+                        </li>
+                      );
+                    });
+                  })()}
                 </ul>
               </div>
 
